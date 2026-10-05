@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+# Project rules
+
+- Data access uses the browser Lovable Cloud client with RLS scoped to `auth.uid()`; every table row is owned by `user_id` (sale_items via its sale). Why: each shopkeeper sees only their own data.
+- Sales are created only through the `create_sale` database function. Why: sale, items and stock decrement happen atomically and stock can never go negative.
+- Signed-in pages live under `src/routes/_authenticated/`. Why: single client-side auth gate.
