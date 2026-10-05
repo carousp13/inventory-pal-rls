@@ -37,13 +37,13 @@ function Vendas() {
 
   function setQty(id: string, qty: number) {
     const p = products.find((x) => x.id === id); if (!p) return;
-    if (qty > p.stock_quantity) return toast.error(`Só há ${p.stock_quantity} un. de ${p.name}.`);
+    if (qty > p.stock_quantity) { toast.error(`Só há ${p.stock_quantity} un. de ${p.name}.`); return; }
     setCart((c) => { const n = { ...c }; if (qty <= 0) delete n[id]; else n[id] = qty; return n; });
   }
 
   async function finalizar() {
-    if (lines.length === 0) return toast.error("Adicione ao menos um produto.");
-    if (pay === "pending_debt" && !customer) return toast.error("Escolha o cliente para vender fiado.");
+    if (lines.length === 0) { toast.error("Adicione ao menos um produto."); return; }
+    if (pay === "pending_debt" && !customer) { toast.error("Escolha o cliente para vender fiado."); return; }
     setSaving(true);
     try {
       const { error } = await supabase.rpc("create_sale", {

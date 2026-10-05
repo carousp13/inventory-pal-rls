@@ -88,9 +88,9 @@ function ProductDialog({ product, onClose }: { product: Product | "new" | null; 
     const cost = parseNonNeg(String(f.get("cost") || "0"));
     const stock = parseNonNeg(String(f.get("stock")), true);
     const min = parseNonNeg(String(f.get("min") || "0"), true);
-    if (!name) return toast.error("Informe o nome do produto.");
-    if (price === null || cost === null) return toast.error("Preços devem ser números iguais ou maiores que zero.");
-    if (stock === null || min === null) return toast.error("Quantidades devem ser números inteiros, sem valores negativos.");
+    if (!name) { toast.error("Informe o nome do produto."); return; }
+    if (price === null || cost === null) { toast.error("Preços devem ser números iguais ou maiores que zero."); return; }
+    if (stock === null || min === null) { toast.error("Quantidades devem ser números inteiros, sem valores negativos."); return; }
     setSaving(true);
     try {
       const row = { name, price, cost_price: cost, stock_quantity: stock, min_stock_alert: min };
@@ -154,7 +154,7 @@ function ImportDialog({ open, onClose, products }: { open: boolean; onClose: () 
   const { items, bad } = parseNota(text);
 
   async function importar() {
-    if (items.length === 0) return toast.error("Nenhum item válido encontrado na nota.");
+    if (items.length === 0) { toast.error("Nenhum item válido encontrado na nota."); return; }
     setSaving(true);
     try {
       for (const it of items) {

@@ -74,8 +74,8 @@ function NewCustomer({ open, onClose }: { open: boolean; onClose: () => void }) 
     const f = new FormData(e.currentTarget);
     const name = String(f.get("name") ?? "").trim();
     const phone = String(f.get("phone") ?? "").trim();
-    if (!name) return toast.error("Informe o nome do cliente.");
-    if (phone && !/^[\d\s()+-]{8,20}$/.test(phone)) return toast.error("Telefone inválido.");
+    if (!name) { toast.error("Informe o nome do cliente."); return; }
+    if (phone && !/^[\d\s()+-]{8,20}$/.test(phone)) { toast.error("Telefone inválido."); return; }
     setSaving(true);
     try {
       const { error } = await supabase.from("customers").insert({ name, phone: phone || null });
@@ -103,7 +103,7 @@ function DebtDialog({ customer, debts, onClose }: { customer: Customer | null; d
   const qc = useQueryClient();
   const [busy, setBusy] = useState<string | null>(null);
   async function markPaid(ids: string[]) {
-    setBusy(ids.length > 1 ? "all" : ids[0]);
+    setBusy(ids.length > 1 ? "all" : (ids[0] ?? null));
     try {
       const { error } = await supabase.from("sales").update({ payment_status: "paid" }).in("id", ids);
       if (error) throw error;

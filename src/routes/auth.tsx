@@ -37,8 +37,8 @@ function AuthPage() {
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (!email.trim() || !password) return toast.error("Preencha e-mail e senha.");
-    if (password.length < 6) return toast.error("A senha precisa ter pelo menos 6 caracteres.");
+    if (!email.trim() || !password) { toast.error("Preencha e-mail e senha."); return; }
+    if (password.length < 6) { toast.error("A senha precisa ter pelo menos 6 caracteres."); return; }
     setLoading(true);
     try {
       if (mode === "in") {
