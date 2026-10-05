@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { BookOpen, LayoutDashboard, LogOut, Package, ShoppingCart, Users } from "lucide-react";
+import { BookOpen, KeyRound, LayoutDashboard, LogOut, Package, ShoppingCart, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -43,9 +43,14 @@ function AppLayout() {
               </Link>
             ))}
           </nav>
-          <button onClick={signOut} className="flex items-center gap-1 text-sm text-muted-foreground" aria-label="Sair">
-            <LogOut className="size-4" /> Sair
-          </button>
+          <div className="flex items-center gap-4">
+            <Link to="/senha" className="flex items-center gap-1 text-sm text-muted-foreground" activeProps={{ className: "text-primary font-medium" }} aria-label="Trocar senha">
+              <KeyRound className="size-4" /> <span className="hidden sm:inline">Senha</span>
+            </Link>
+            <button onClick={signOut} className="flex items-center gap-1 text-sm text-muted-foreground" aria-label="Sair">
+              <LogOut className="size-4" /> Sair
+            </button>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-3xl px-4 py-5">

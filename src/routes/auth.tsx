@@ -28,6 +28,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -66,6 +67,24 @@ function AuthPage() {
     }
   }
 
+  async function forgot() {
+    const e = email.trim();
+    if (!e) { toast.error("Digite seu e-mail primeiro."); return; }
+    setSending(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(e, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Se esse e-mail estiver cadastrado, você receberá um link para criar uma nova senha.");
+    } catch (err) {
+      const m = errMsg(err);
+      toast.error(m.toLowerCase().includes("rate limit") ? "Muitas solicitações seguidas. Aguarde alguns minutos e tente de novo." : m);
+    } finally {
+      setSending(false);
+    }
+  }
+
   return (
     <main className="flex min-h-screen flex-col">
       <div className="bg-hero px-6 pb-14 pt-10 text-primary-foreground">
@@ -84,6 +103,11 @@ function AuthPage() {
         <div className="space-y-1.5">
           <Label htmlFor="pw">Senha</Label>
           <Input id="pw" type="password" autoComplete={mode === "in" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} className="h-11" required />
+          {mode === "in" && (
+            <button type="button" onClick={forgot} disabled={sending} className="text-xs font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50">
+              {sending ? "Enviando…" : "Esqueci minha senha"}
+            </button>
+          )}
         </div>
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
           {loading && <Loader2 className="animate-spin" />}
