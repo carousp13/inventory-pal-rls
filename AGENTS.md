@@ -14,4 +14,5 @@
 - Data access uses the browser Lovable Cloud client with RLS scoped to `auth.uid()`; every table row is owned by `user_id` (sale_items via its sale). Why: each shopkeeper sees only their own data.
 - Sales are created only through the `create_sale` database function. Why: sale, items and stock decrement happen atomically and stock can never go negative.
 - Signed-in pages live under `src/routes/_authenticated/`. Why: single client-side auth gate.
-- Password changes go through `supabase.auth.updateUser`: the signed-in screen (`/senha`) sends `current_password`, the public recovery page (`/reset-password`) never does. Why: the backend requires the current password for signed-in changes but exempts recovery sessions, so mixing the two breaks one flow.
+- Password changes go through `supabase.auth.updateUser`: the signed-in screen (`/perfil`) sends `current_password`, the public recovery page (`/reset-password`) never does. Why: the backend requires the current password for signed-in changes but exempts recovery sessions, so mixing the two breaks one flow.
+- Profile data (name, avatar) lives in `auth.users.user_metadata` (`full_name`, `avatar_path`); avatar files go to the private `avatars` storage bucket under `<user_id>/`. Why: no extra table needed and RLS on storage.objects already scopes files to the owner.
