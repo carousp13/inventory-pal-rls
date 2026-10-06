@@ -40,8 +40,8 @@ function Perfil() {
       if (!user) return;
       setUserId(user.id);
       setEmail(user.email ?? "");
-      setName((user.user_metadata?.full_name as string | undefined) ?? "");
-      const path = user.user_metadata?.avatar_path as string | undefined;
+      setName((user.user_metadata?.["full_name"] as string | undefined) ?? "");
+      const path = user.user_metadata?.["avatar_path"] as string | undefined;
       if (path) {
         const { data: blob } = await supabase.storage.from("avatars").download(path);
         if (blob) {
