@@ -44,8 +44,8 @@ function AppLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-4">
-            <Link to="/senha" className="flex items-center gap-1 text-sm text-muted-foreground" activeProps={{ className: "text-primary font-medium" }} aria-label="Trocar senha">
-              <KeyRound className="size-4" /> <span className="hidden sm:inline">Senha</span>
+            <Link to="/perfil" className="flex items-center gap-1 text-sm text-muted-foreground" activeProps={{ className: "text-primary font-medium" }} aria-label="Meu perfil">
+              <UserRound className="size-4" /> <span className="hidden sm:inline">Perfil</span>
             </Link>
             <button onClick={signOut} className="flex items-center gap-1 text-sm text-muted-foreground" aria-label="Sair">
               <LogOut className="size-4" /> Sair

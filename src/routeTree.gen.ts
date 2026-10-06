@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedSenhaRouteImport } from './routes/_authenticated/senha'
 import { Route as AuthenticatedVendasRouteImport } from './routes/_authenticated/vendas'
 
@@ -53,6 +54,11 @@ const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSenhaRoute = AuthenticatedSenhaRouteImport.update({
   id: '/senha',
   path: '/senha',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/clientes': typeof AuthenticatedClientesRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
   '/senha': typeof AuthenticatedSenhaRoute
   '/vendas': typeof AuthenticatedVendasRoute
 }
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/clientes': typeof AuthenticatedClientesRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
   '/senha': typeof AuthenticatedSenhaRoute
   '/vendas': typeof AuthenticatedVendasRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/_authenticated/senha': typeof AuthenticatedSenhaRoute
   '/_authenticated/vendas': typeof AuthenticatedVendasRoute
 }
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/estoque'
     | '/painel'
+    | '/perfil'
     | '/senha'
     | '/vendas'
   fileRoutesByTo: FileRoutesByTo
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/estoque'
     | '/painel'
+    | '/perfil'
     | '/senha'
     | '/vendas'
   id:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/_authenticated/clientes'
     | '/_authenticated/estoque'
     | '/_authenticated/painel'
+    | '/_authenticated/perfil'
     | '/_authenticated/senha'
     | '/_authenticated/vendas'
   fileRoutesById: FileRoutesById
@@ -188,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/senha': {
       id: '/_authenticated/senha'
       path: '/senha'
@@ -209,6 +228,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
   AuthenticatedSenhaRoute: typeof AuthenticatedSenhaRoute
   AuthenticatedVendasRoute: typeof AuthenticatedVendasRoute
 }
@@ -217,6 +237,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
   AuthenticatedSenhaRoute: AuthenticatedSenhaRoute,
   AuthenticatedVendasRoute: AuthenticatedVendasRoute,
 }
