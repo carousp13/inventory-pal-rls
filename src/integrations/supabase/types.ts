@@ -14,8 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      companies: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      company_members: {
+        Row: {
+          company_id: string
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_members_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
+          company_id: string | null
           created_at: string
           id: string
           name: string
@@ -23,6 +83,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          company_id?: string | null
           created_at?: string
           id?: string
           name: string
@@ -30,16 +91,26 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          company_id?: string | null
           created_at?: string
           id?: string
           name?: string
           phone?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "customers_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
+          company_id: string | null
           cost_price: number
           created_at: string
           id: string
@@ -50,6 +121,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          company_id?: string | null
           cost_price?: number
           created_at?: string
           id?: string
@@ -60,6 +132,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          company_id?: string | null
           cost_price?: number
           created_at?: string
           id?: string
@@ -69,7 +142,15 @@ export type Database = {
           stock_quantity?: number
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sale_items: {
         Row: {
@@ -112,6 +193,7 @@ export type Database = {
       }
       sales: {
         Row: {
+          company_id: string | null
           created_at: string
           customer_id: string | null
           id: string
@@ -120,6 +202,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          company_id?: string | null
           created_at?: string
           customer_id?: string | null
           id?: string
@@ -128,6 +211,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          company_id?: string | null
           created_at?: string
           customer_id?: string | null
           id?: string
@@ -137,6 +221,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "sales_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "sales_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
@@ -145,18 +236,48 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_access_company: { Args: { _company: string }; Returns: boolean }
+      create_my_company: { Args: { _name: string }; Returns: string }
       create_sale: {
         Args: { _customer_id: string; _items: Json; _payment_status: string }
         Returns: string
       }
+      current_company_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_company_admin: { Args: { _company: string }; Returns: boolean }
+      is_master: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "master"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -283,6 +404,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["master"],
+    },
   },
 } as const
