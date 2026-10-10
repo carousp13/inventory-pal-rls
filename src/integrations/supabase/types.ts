@@ -108,6 +108,32 @@ export type Database = {
           },
         ]
       }
+      master_context: {
+        Row: {
+          company_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "master_context_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           company_id: string | null
@@ -275,6 +301,7 @@ export type Database = {
       }
       is_company_admin: { Args: { _company: string }; Returns: boolean }
       is_master: { Args: never; Returns: boolean }
+      master_switch_company: { Args: { _company: string }; Returns: undefined }
     }
     Enums: {
       app_role: "master"

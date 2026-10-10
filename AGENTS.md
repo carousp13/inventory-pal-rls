@@ -11,7 +11,9 @@
 
 # Project rules
 
-- Data access uses the browser Lovable Cloud client with RLS scoped to `auth.uid()`; every table row is owned by `user_id` (sale_items via its sale). Why: each shopkeeper sees only their own data.
+- Data is scoped per company: products/customers/sales carry `company_id` (default `current_company_id()`), RLS uses `can_access_company()`; sale_items via its sale. Why: several users of one company share the same stock and sales.
+- Company roles (`admin`/`operator`) live in `company_members`; the platform Master lives in `user_roles`; a Master's active company lives in `master_context`. Why: roles never sit on user-editable data, and Master can operate any company.
+- Creating/removing users goes through server functions in `src/lib/team.functions.ts` that check `is_company_admin` as the caller before using the admin client. Why: account creation needs privileged access.
 - Sales are created only through the `create_sale` database function. Why: sale, items and stock decrement happen atomically and stock can never go negative.
 - Signed-in pages live under `src/routes/_authenticated/`. Why: single client-side auth gate.
 - Password changes go through `supabase.auth.updateUser`: the signed-in screen (`/perfil`) sends `current_password`, the public recovery page (`/reset-password`) never does. Why: the backend requires the current password for signed-in changes but exempts recovery sessions, so mixing the two breaks one flow.

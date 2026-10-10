@@ -20,20 +20,27 @@ export const meQuery = queryOptions({
     const { data: u } = await supabase.auth.getUser();
     const uid = u.user?.id;
     if (!uid) throw new Error("Não autenticado");
-    const [{ data: member, error: e1 }, { data: master, error: e2 }] = await Promise.all([
-      supabase.from("company_members").select("*, companies(id, name)").eq("user_id", uid).maybeSingle(),
+    const [{ data: member, error: e1 }, { data: master, error: e2 }, { data: cid, error: e3 }] = await Promise.all([
+      supabase.from("company_members").select("*").eq("user_id", uid).maybeSingle(),
       supabase.rpc("is_master"),
+      supabase.rpc("current_company_id"),
     ]);
     if (e1) throw e1;
     if (e2) throw e2;
+    if (e3) throw e3;
     const isMaster = !!master;
     const role: Role | null = isMaster ? "master" : ((member?.role as Role | undefined) ?? null);
+    let companyName: string | null = null;
+    if (cid) {
+      const { data: c } = await supabase.from("companies").select("name").eq("id", cid).maybeSingle();
+      companyName = c?.name ?? null;
+    }
     return {
       userId: uid,
       isMaster,
       role,
-      companyId: member?.company_id ?? null,
-      companyName: (member as unknown as { companies: { name: string } | null } | null)?.companies?.name ?? null,
+      companyId: (cid as string | null) ?? null,
+      companyName,
       canManageTeam: isMaster || member?.role === "admin",
     };
   },
